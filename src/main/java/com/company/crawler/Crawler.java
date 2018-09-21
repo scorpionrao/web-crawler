@@ -170,15 +170,21 @@ public class Crawler {
 
 		node.setRequestType(RequestType.HEAD);
 
+		HttpRequest request = null;
 		try {
-			HttpRequest request = HttpRequest.head(uri.toURL()).connectTimeout(10000);
+			request = HttpRequest.head(uri.toURL()).connectTimeout(10000);
 
 			node.setResponseCode(request.code());
 		} catch (Exception e) {
+
 			node.setPageNodeStatus(WebsiteGraph.PageNodeStatus.FAILURE);
 			node.setError(e.toString());
             System.out.println("Error! While crawling " + uri.toString() + ", got " + e.toString());
 			return;
+		} finally {
+			if(request != null) {
+				request.disconnect();
+			}
 		}
 
 		node.setPageNodeStatus(WebsiteGraph.PageNodeStatus.SUCCESS);

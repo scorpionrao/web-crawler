@@ -14,7 +14,12 @@ import java.util.regex.Pattern;
 
 public class HtmlHelper {
 	public static String cleanUpHref(String href) {
-		return href.replace(" ", "%20");
+		href = href.replace(" ", "%20");
+
+		int index = href.indexOf("#");
+		String additionalURL = href.substring(index + 1);
+		additionalURL = additionalURL.replaceAll("#", "%23");
+		return href.substring(0, index + 1) + additionalURL;
 	}
 
     public static String absolutizePath(String path, String basePath) {

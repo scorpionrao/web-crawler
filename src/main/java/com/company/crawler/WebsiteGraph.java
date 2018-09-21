@@ -48,7 +48,8 @@ public class WebsiteGraph {
 
 	void addNode(URI url) {
 		if (!nodes.containsKey(url)) {
-			nodes.put(url, new PageNode(url));
+			PageNode pageNode = new PageNode(url);
+			nodes.put(url, pageNode);
 		}
 	}
 
