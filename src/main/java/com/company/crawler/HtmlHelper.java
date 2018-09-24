@@ -103,7 +103,8 @@ public class HtmlHelper {
 
 		Matcher hrefFromATagMatcher = Pattern.compile("<a [^>]*href=\"([^\"]*)").matcher(bodyStr);
 		while (hrefFromATagMatcher.find()) {
-			out.add(hrefFromATagMatcher.group(1));
+			String url = hrefFromATagMatcher.group(1);
+			out.add(url);
 		}
 
 		Matcher hrefFromLinkTagMatcher = Pattern.compile("<link [^>]*href=\"([^\"]*)\"").matcher(bodyStr);

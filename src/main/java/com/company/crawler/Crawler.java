@@ -4,6 +4,7 @@ import com.company.lib.HttpRequest;
 import com.company.loggers.CrawlerLogger;
 
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -152,7 +153,8 @@ public class Crawler {
 					+ graph.parents(node.url) + ")");
 		} else {
 			if (request.header("Content-Type").startsWith("text")) {
-				for (URI neighborUri : HtmlHelper.getNeighbors(request.body(), uri, errors)) {
+				ArrayList<URI> list = HtmlHelper.getNeighbors(request.body(), uri, errors);
+				for (URI neighborUri : list) {
 					graph.addNeighbor(uri, neighborUri);
 					System.out.println("adding " + neighborUri + " from " + uri);
 					enqueue(neighborUri);
@@ -180,11 +182,8 @@ public class Crawler {
 			node.setPageNodeStatus(WebsiteGraph.PageNodeStatus.FAILURE);
 			node.setError(e.toString());
             System.out.println("Error! While crawling " + uri.toString() + ", got " + e.toString());
+			finalizeCrawl(uri);
 			return;
-		} finally {
-			if(request != null) {
-				request.disconnect();
-			}
 		}
 
 		node.setPageNodeStatus(WebsiteGraph.PageNodeStatus.SUCCESS);
